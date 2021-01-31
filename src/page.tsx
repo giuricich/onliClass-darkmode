@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import { Dialog, Header, Input, Form, Button, Grid } from "@fluentui/react-northstar"
+import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 
-
+const startWithDialog = false;
 
 function Page() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(startWithDialog)
 
   const formFields = [
     {
@@ -36,6 +36,28 @@ function Page() {
     }
   ]
 
+  const gridItems = [
+    <Segment
+      color="brand"
+      inverted
+    />,
+    <Segment
+      color="red"
+      styles={{gridColumn: 'span 2'}}
+
+      inverted
+    />,
+    <Segment
+      color="green"
+      styles={{gridColumn: 'span 2'}}
+      inverted
+    />,
+    <Segment
+      color="orange"
+      inverted
+    />
+  ]
+
   return (
     <div id='page'>
       <Header content="OnliClass" align='center' />
@@ -50,8 +72,10 @@ function Page() {
           open={open}
           trapFocus={true}
         />
-        <Grid />
-        <p>this is content</p>
+        <Grid 
+          content={gridItems}
+          columns="1fr 0.15fr 0.85fr" rows="40vh 40vh"
+        />
       </div>
     </div>
   )
