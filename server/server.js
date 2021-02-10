@@ -13,7 +13,7 @@ const io = require('socket.io')(server);
 /* Router */
 let indexRouter = require('./routes/index');
 
-app.use(express.static(path.join(__dirname, "../client")));
+app.use(express.static(path.join(__dirname, "../build")));
 
 const hostname = 'http://localhost:' + port;
 const allRooms = new Map();

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
 
-const startWithDialog = false;
+const startWithDialog = true;
 
 function Page() {
   const [open, setOpen] = useState(startWithDialog)
@@ -37,12 +37,19 @@ function Page() {
     }
   ]
 
+  // const videoStyle : CSSProperties = {
+  //   margin: 'auto',
+  //   width: '100%',
+  // }
+
   const gridItems = [
     <Segment
       color="brand"
       inverted
     />,
-    <Video />,
+    <Video 
+      styles={{gridColumn: 'span 2'}}
+    />,
     <Segment
       color="green"
       styles={{gridColumn: 'span 2'}}
@@ -62,7 +69,10 @@ function Page() {
           content={
             <Form
               fields={formFields}
-              onSubmit={() => setOpen(false)}
+              onSubmit={() => {
+                setOpen(false) 
+                console.log('click!')
+              }}
             />
           }
           open={open}

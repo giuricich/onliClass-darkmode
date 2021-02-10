@@ -28,12 +28,11 @@ function findRoomFromSessionId(sessionId) {
   return _.findKey(roomToSessionIdDictionary, function (value) { return value === sessionId; });
 }
 
-//   // _-_-_-_- Entry Point -_-_-_-_-_
-// router.get('/', function (req, res) {
+  // _-_-_-_- Entry Point -_-_-_-_-_
+router.get('/', function (req, res) {
 
-//   console.log(__dirname);
-//   res.sendFile(path.join(__dirname, '../../client/html', 'index.html'))
-// });
+  res.sendFile(path.join(__dirname, '../../build/', 'index.html'))
+});
 
 /**
  * GET /session redirects to /room/session

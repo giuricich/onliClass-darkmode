@@ -19,10 +19,19 @@ $(document).ready(function() {
   const $usernameInput = $('#usernameInput'); // Input for username
   const $roomnumInput = $('#roomnumInput'); // Input for roomNumber
 
+
+  // form fileds
+  const $nameInput = $('#name-input');
+  const $numberInput = $('#number-input');
+
+
   const $messages = $('#chatRoom'); // Messages area
   const $inputMessage = $('#messageBar'); // Input message input box
-  const $name_overlay = $('#name_overlay');
-  const $room_overlay = $('#room_overlay');
+
+//   @depreciated
+//   const $name_overlay = $('#name_overlay');
+//   const $room_overlay = $('#room_overlay');
+
 
   const $chatPage = $('.chat.page'); // The chatroom page
   const $containerWrapper = $('#container-wrapper'); // The main section wrapper
@@ -64,29 +73,17 @@ $(document).ready(function() {
       addMessageElement($el, options);
   }
 
-  // Sets the client's username
-  const setUsername = () => {
-      username = cleanInput($usernameInput.val().trim());
-      // If the username is valid
-      if (username) {
-          $name_overlay.fadeOut();
-          $room_overlay.css('visibility', 'visible');
-          $name_overlay.off('click');
-          connected = true;
-          $currentInput = $inputMessage.focus();
-          // Tell the server your username
-          socket.emit('add user', username);
-      }
+  const setConnectionInfo = () => {
+      username = $nameInput.val().trim()
+      room_num = cleanInput($numberInput.val().trim())
+
+      connected = true
+      socket.emit('add user', username)
+      joinRoom(room_num, username);
+
+      // console.log(username, room_num);
   }
 
-  // Sets the client's room number
-  const setRoomNum = () => {
-      room_num = cleanInput($roomnumInput.val().trim());
-      console.log(room_num);
-      joinRoom(room_num, username);
-      $room_overlay.fadeOut();
-      $containerWrapper.css('visibility', 'visible');
-  }
   // Adds the visual chat message to the message list
   const addChatMessage = (data, options) => {
       // Don't fade the message in if there is an 'X was typing'
@@ -157,7 +154,7 @@ $(document).ready(function() {
       $messages[0].scrollTop = $messages[0].scrollHeight;
   }
 
-  // Prevents input from having injected markup
+  // Prevents input from having injected markup - very cool
   const cleanInput = (input) => {
       return $('<div/>').text(input).html();
   }
@@ -214,13 +211,13 @@ $(document).ready(function() {
               sendMessage();
               socket.emit('stop typing');
               typing = false;
-          } else if (username && !room_num) {
-              setRoomNum();
-          } else if (!username) {
-              setUsername();
           }
       }
   });
+
+  $window.submit(event => {
+    setConnectionInfo()
+  })
 
   $inputMessage.on('input', () => {
       updateTyping();
@@ -229,9 +226,9 @@ $(document).ready(function() {
   // Click events
 
   // Focus input when clicking anywhere on login page
-  $name_overlay.click(() => {
-      $currentInput.focus();
-  });
+//   $name_overlay.click(() => {
+//       $currentInput.focus();
+//   });
 
   // Focus input when clicking on the message input's border
   $inputMessage.click(() => {

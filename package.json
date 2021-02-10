@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \" snowpack dev\" \"node ./server/server.js\""
+    "start": "concurrently \" snowpack dev\" \"node ./server/server.js\"",
+    "server": "node ./server/server.js",
+    "dev": "snowpack dev",
+    "build": "snowpack build"
   },
   "keywords": [],
   "author": "",
