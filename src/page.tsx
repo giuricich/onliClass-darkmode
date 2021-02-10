@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
+import Video from "./Video";
 
 const startWithDialog = false;
 
@@ -41,12 +42,7 @@ function Page() {
       color="brand"
       inverted
     />,
-    <Segment
-      color="red"
-      styles={{gridColumn: 'span 2'}}
-
-      inverted
-    />,
+    <Video />,
     <Segment
       color="green"
       styles={{gridColumn: 'span 2'}}
