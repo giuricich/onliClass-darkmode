@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
+import ChatArea from "./Chat"
 
 const startWithDialog = true;
 
@@ -37,11 +38,6 @@ function Page() {
     }
   ]
 
-  // const videoStyle : CSSProperties = {
-  //   margin: 'auto',
-  //   width: '100%',
-  // }
-
   const gridItems = [
     <Segment
       color="brand"
@@ -55,16 +51,15 @@ function Page() {
       styles={{gridColumn: 'span 2'}}
       inverted
     />,
-    <Segment
-      color="orange"
-      inverted
-    />
+    <ChatArea />
   ]
 
   return (
     <div id='page'>
       <Header content="OnliClass" align='center' />
-      <div id='content'>
+      <div id='content'
+        style={{margin: '0px 6vw'}}
+      >
         <Dialog
           content={
             <Form

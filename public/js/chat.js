@@ -16,22 +16,13 @@ $(document).ready(function() {
 
   // Initialize variables
   const $window = $(window);
-  const $usernameInput = $('#usernameInput'); // Input for username
-  const $roomnumInput = $('#roomnumInput'); // Input for roomNumber
-
 
   // form fileds
   const $nameInput = $('#name-input');
   const $numberInput = $('#number-input');
 
-
   const $messages = $('#chatRoom'); // Messages area
   const $inputMessage = $('#messageBar'); // Input message input box
-
-//   @depreciated
-//   const $name_overlay = $('#name_overlay');
-//   const $room_overlay = $('#room_overlay');
-
 
   const $chatPage = $('.chat.page'); // The chatroom page
   const $containerWrapper = $('#container-wrapper'); // The main section wrapper
@@ -43,7 +34,6 @@ $(document).ready(function() {
   let connected = false;
   let typing = false;
   let lastTypingTime;
-  let $currentInput = $usernameInput.focus();
 
   // Sends a chat message
   function sendMessage() {
@@ -81,7 +71,6 @@ $(document).ready(function() {
       socket.emit('add user', username)
       joinRoom(room_num, username);
 
-      // console.log(username, room_num);
   }
 
   // Adds the visual chat message to the message list
@@ -224,11 +213,6 @@ $(document).ready(function() {
   });
 
   // Click events
-
-  // Focus input when clicking anywhere on login page
-//   $name_overlay.click(() => {
-//       $currentInput.focus();
-//   });
 
   // Focus input when clicking on the message input's border
   $inputMessage.click(() => {
