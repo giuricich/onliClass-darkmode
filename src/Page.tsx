@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
-import ChatArea from "./Chat"
+import ChatArea from "./ChatClass"
 
-const startWithDialog = true;
+const startWithDialog = false;
 
 function Page() {
   const [open, setOpen] = useState(startWithDialog)

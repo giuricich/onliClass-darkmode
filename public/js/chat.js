@@ -2,6 +2,14 @@ $(document).ready(function() {
 
   console.log("Initializing chat variables");
 
+  const uiChat = $('.ui-chat')
+
+  // works for clicks
+  uiChat.on('click', () => {
+      console.log('clicked@!');
+  })
+
+
   const FADE_TIME = 150; // ms
   const TYPING_TIMER_LENGTH = 400; // ms
   const COLORS = [
@@ -57,11 +65,6 @@ $(document).ready(function() {
       }
   }
 
-  // Log a message
-  const log = (message, options) => {
-      var $el = $('<li>').addClass('log').text(message);
-      addMessageElement($el, options);
-  }
 
   const setConnectionInfo = () => {
       username = $nameInput.val().trim()
@@ -111,6 +114,14 @@ $(document).ready(function() {
           $(this).remove();
       });
   }
+
+
+    // Log a message
+    const log = (message, options) => {
+        var $el = $('<li>').addClass('log').text(message);
+        addMessageElement($el, options);
+        
+    }
 
   // Adds a message element to the messages and scrolls to the bottom
   // el - The element to add as a message

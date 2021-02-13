@@ -15,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@snowpack/plugin-typescript": "^1.2.1",
+    "@types/jquery": "^3.5.5",
     "@types/node": "^14.14.22",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
