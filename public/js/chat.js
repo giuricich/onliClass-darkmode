@@ -2,14 +2,6 @@ $(document).ready(function() {
 
   console.log("Initializing chat variables");
 
-  const uiChat = $('.ui-chat')
-
-  // works for clicks
-  uiChat.on('click', () => {
-      console.log('clicked@!');
-  })
-
-
   const FADE_TIME = 150; // ms
   const TYPING_TIMER_LENGTH = 400; // ms
   const COLORS = [
@@ -85,6 +77,8 @@ $(document).ready(function() {
           options.fade = false;
           $typingMessages.remove();
       }
+
+      window.dispatchEvent(new CustomEvent('message', {detail: data}))
 
       var $usernameDiv = $('<span class="username"/>')
           .text(data.username)
@@ -272,6 +266,8 @@ $(document).ready(function() {
   socket.on('stop typing', (data) => {
       removeChatTyping(data);
   });
+
+
 
 
   const typeWriter = () => {

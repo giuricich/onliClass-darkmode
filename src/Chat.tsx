@@ -22,17 +22,26 @@ const messageRecieved = () => {
 export default function ChatArea(props) {
   const ref = React.useRef<HTMLUListElement>()
 
-  // const messageEvent = new CustomEvent('message', {detail: {type : 'test'}})
-
-  React.useEffect( () => {
-    // ref.current.addEventListener('message', messageRecieved, {passive : true})
-    // ref.current.style.background = 'red'
-    ref.current &&
-    console.log(ref.current.style.background, 'effect has been used');
+  // logs the message to the console, but does it twice??
+  // TODO: fix event firing twice 
+  window.addEventListener('message', (event : CustomEvent) => {
+    console.log('detail:', event.detail);
     
   })
 
   return (
-    <Chat ref={ref} items={items} />
+    // <Chat items={items} />
+    <div id="chat">
+    <div id="chatRoom">
+    </div>
+    <div id="messageArea">
+      <div>
+        <input id="messageBar" autoComplete="off" placeholder="Type here..." />
+      </div>
+      <div>
+        <button id="sendButton" type='button'>Send</button>
+      </div>
+    </div>
+  </div>
   )
 }
