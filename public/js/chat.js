@@ -22,7 +22,7 @@ $(document).ready(function() {
   const $numberInput = $('#number-input');
 
   const $messages = $('#chatRoom'); // Messages area
-  const $inputMessage = $('#messageBar'); // Input message input box
+  const $inputMessage = document.querySelector('#messageBar'); // Input message input box
 
   const $chatPage = $('.chat.page'); // The chatroom page
   const $containerWrapper = $('#container-wrapper'); // The main section wrapper
@@ -37,12 +37,12 @@ $(document).ready(function() {
 
   // Sends a chat message
   function sendMessage() {
-      let message = $inputMessage.val();
+      let message = $inputMessage.value;
       // Prevent markup from being injected into the message
       message = cleanInput(message);
       // if there is a non-empty message and a socket connection
       if (message && connected) {
-          $inputMessage.val('');
+          $inputMessage.value = '';
           addChatMessage({
               username: username,
               message: message
@@ -78,8 +78,9 @@ $(document).ready(function() {
           $typingMessages.remove();
       }
 
+      console.log('about to dispatch event');
       window.dispatchEvent(new CustomEvent('message', {detail: data}))
-
+  
       var $usernameDiv = $('<span class="username"/>')
           .text(data.username)
           .css('color', getUsernameColor(data.username));

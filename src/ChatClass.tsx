@@ -1,29 +1,40 @@
-import React, { Component, createRef } from 'react'
-import { Chat, ChatItemProps, ShorthandCollection } from '@fluentui/react-northstar'
+import React, { Component, createRef, FormEvent, useState } from 'react'
+import { Chat, ChatItemProps, Input, ShorthandCollection } from '@fluentui/react-northstar'
 
-const items: ShorthandCollection<ChatItemProps> = [
-  {
-    message: <Chat.Message content="Hello" author="John Doe" timestamp="10:15 PM" />,
-    contentPosition: 'end',
-    key: 'message-id-1',
-  },
-  {
-    message: <Chat.Message content="Hello, Are you there?" author="John Doe" timestamp="10:15 PM" />,
-    contentPosition: 'end',
-    key: 'message-id-2',
+
+
+
+export default function ChatClass(props) {
+
+  const [items, setItems] = useState([])
+
+  const clearText = (e : FormEvent<HTMLInputElement>) => {
+    // does not clear input
+    e.currentTarget.value = ''
   }
-]
 
-export default class extends Component {
-  
+  // logs the message to the console, but does it twice??
+  // TODO: fix event firing twice 
+  window.addEventListener('message', (event: CustomEvent) => {
+    event.stopImmediatePropagation();
+    console.log('detail:', event.detail);
+    setItems(currentItems => [
+      ...currentItems,
+      {
+        message: <Chat.Message content={event.detail.message} author={event.detail.username} timestamp={new Date().toLocaleTimeString()} mine />,
+        contentPosition: 'end',
+        key: 'message-id-' + items.length
+      }
+    ])
 
-  render() {
-    return (
+  })
 
-
-      <>
-      </>
-
-    )
-  }
+  return (
+    <div>
+      <div style={{ height: "100%", width: "100%", overflow: 'scroll' }}>
+        <Chat items={items} styles={{ minHeight: '100%' }} />
+      </div>
+      <Input onSubmit={clearText} id="messageBar" label="Type a message" labelPosition="inside" clearable/>
+    </div>
+  )
 }

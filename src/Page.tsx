@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
 import ChatArea from "./Chat"
+import ChatClass from "./ChatClass";
 
 const startWithDialog = true;
 
@@ -39,10 +40,7 @@ function Page() {
   ]
 
   const gridItems = [
-    <Segment
-      color="brand"
-      inverted
-    />,
+    <ChatClass />,
     <Video 
       styles={{gridColumn: 'span 2'}}
     />,
