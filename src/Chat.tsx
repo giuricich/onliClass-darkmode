@@ -30,7 +30,7 @@ export default function ChatArea(props) {
       </div>
       <div id="messageArea">
         <div>
-          <input  autoComplete="off" placeholder="Type here..." />
+          <input autoComplete="off" placeholder="Type here..." />
         </div>
         <div>
           <button id="sendButton" type='button'>Send</button>
