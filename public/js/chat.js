@@ -42,7 +42,6 @@ $(document).ready(function() {
       message = cleanInput(message);
       // if there is a non-empty message and a socket connection
       if (message && connected) {
-          $inputMessage.value = '';
           addChatMessage({
               username: username,
               message: message
@@ -214,16 +213,16 @@ $(document).ready(function() {
     setConnectionInfo()
   })
 
-  $inputMessage.on('input', () => {
-      updateTyping();
-  });
+//   $inputMessage.on('input', () => {
+//       updateTyping();
+//   });
 
   // Click events
 
   // Focus input when clicking on the message input's border
-  $inputMessage.click(() => {
-      $inputMessage.focus();
-  });
+//   $inputMessage.click(() => {
+//       $inputMessage.focus();
+//   });
 
 
   $sendButton.click(() => {
