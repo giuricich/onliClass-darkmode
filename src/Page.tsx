@@ -40,16 +40,24 @@ function Page() {
   ]
 
   const gridItems = [
-    <ChatClass />,
+    <Segment 
+      color="red"
+      inverted
+      key='0'
+    />,
     <Video 
       styles={{gridColumn: 'span 2'}}
+      key='1'
     />,
     <Segment
       color="green"
       styles={{gridColumn: 'span 2'}}
       inverted
+      key='2'
     />,
-    <ChatArea />
+    <ChatClass 
+    key='3'
+    />
   ]
 
   return (
