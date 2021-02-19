@@ -2,7 +2,8 @@ $(document).ready(function () {
 
     console.log("Initializing chat variables");
 
-    const dev = true;
+    const dev = false;
+
 
     const FADE_TIME = 150; // ms
     const TYPING_TIMER_LENGTH = 400; // ms
@@ -38,17 +39,14 @@ $(document).ready(function () {
     let typing = false;
     let lastTypingTime;
 
-    // Sends a chat message
+    // Sends a chat message -- locally from client
     function sendMessage() {
         let message = $inputMessage.value;
         // Prevent markup from being injected into the message
         message = cleanInput(message);
         // if there is a non-empty message and a socket connection
         if (message && connected) {
-            addChatMessage({
-                username: username,
-                message: message
-            });
+            addChatMessage({username, message}, {kind: "sent"});
             // tell server to execute 'new message' and send along one parameter
 
             let payload = {
@@ -73,19 +71,21 @@ $(document).ready(function () {
     }
 
     // Adds the visual chat message to the message list
-    const addChatMessage = (data, options) => {
-        // Don't fade the message in if there is an 'X was typing'
-        var $typingMessages = getTypingMessages(data);
-        options = options || {};
-        if ($typingMessages.length !== 0) {
-            options.fade = false;
-            $typingMessages.remove();
-        }
+    const addChatMessage = (data, meta) => {
+
 
         console.log('about to dispatch event');
-        window.dispatchEvent(new CustomEvent('message', { detail: data }))
+        window.dispatchEvent(new CustomEvent('message', { detail: {data, meta} }))
 
         $chatContainer.scrollTop = $chatContainer.scrollHeight
+
+                // Don't fade the message in if there is an 'X was typing'
+        // var $typingMessages = getTypingMessages(data);
+        // options = options || {};
+        // if ($typingMessages.length !== 0) {
+        //     options.fade = false;
+        //     $typingMessages.remove();
+        // }
 
         // var $usernameDiv = $('<span class="username"/>')
         //     .text(data.username)
@@ -106,7 +106,7 @@ $(document).ready(function () {
     const addChatTyping = (data) => {
         data.typing = true;
         data.message = 'is typing';
-        addChatMessage(data);
+        addChatMessage(data, {kind: "user-typing"});
     }
 
     // Removes the visual chat typing message
@@ -253,7 +253,7 @@ $(document).ready(function () {
 
         // Whenever the server emits 'new message', update the chat body
         socket.on('new message', (data) => {
-            addChatMessage(data);
+            addChatMessage(data, {kind : "received"});
         });
 
         // Whenever the server emits 'user joined', log it in the chat body
