@@ -35,7 +35,7 @@ export default function ChatClass(props) {
         
         let message = {
           message: <Chat.Message content={data.message} author={data.username} timestamp={new Date().toLocaleTimeString()} mine={meta.kind === "sent"} />,
-          contentPosition: 'end',
+          contentPosition: meta.kind === "sent" ? 'end' : 'start',
           attached: (lastItem.message.props.author === data.username),
           key: 'message-id-' + currentItems.length
         }
