@@ -18,29 +18,45 @@ export default function ChatClass(props) {
       const meta = event.detail.meta;
       const data = event.detail.data;
       event.stopImmediatePropagation();
+
       console.log('data:', data);
       console.log('kind:', meta);
 
-      setInput("")
-      setItems(currentItems => {
-        // this is for the first time it runs and there is nothing in the currentItems array
-        // probs a better way to do this, but whatevs for now
-        let lastItem = {message: {props: { author: null}}}
-
-        if(currentItems.length -1 >= 0) {
-          lastItem = currentItems[currentItems.length - 1]
-        }
-
-        console.log('last item', lastItem);
-        
-        let message = {
-          message: <Chat.Message content={data.message} author={data.username} timestamp={new Date().toLocaleTimeString()} mine={meta.kind === "sent"} />,
-          contentPosition: meta.kind === "sent" ? 'end' : 'start',
-          attached: (lastItem.message.props.author === data.username),
+      if (meta.kind !== 'sent' && meta.kind !== 'received') {
+        setItems(currentItems => [...currentItems,
+        {
+          children: <Divider content={data.message} color={meta.kind === 'welcome' ? 'brand' : 'grey'} important={meta.kind === 'welcome'} />,
           key: 'message-id-' + currentItems.length
         }
+        ])
+      }
+      else {
+        setInput("")
+        setItems(currentItems => {
+          // this is for the first time it runs and there is nothing in the currentItems array
+          // probs a better way to do this, but whatevs for now
+          let lastItem = { message: { props: { author: null } }, children:{} }
 
-        return [...currentItems, message]})
+          // if there is at least one element in currentItem, lastItem is set to the last element in the array
+          if (currentItems.length - 1 >= 0) {
+            lastItem = currentItems[currentItems.length - 1]
+          }
+
+          let message = {
+            message: <Chat.Message content={data.message} author={data.username} timestamp={new Date().toLocaleTimeString()} mine={meta.kind === "sent"} />,
+            contentPosition: meta.kind === "sent" ? 'end' : 'start',
+            attached: (!lastItem.children && (lastItem.message.props.author === data.username)),
+            // can't access lastItem.message if the last message was 
+            key: 'message-id-' + currentItems.length
+          }
+
+          console.log('last item', lastItem);
+
+          return [...currentItems, message]
+        })
+      }
+
+
     })
   }, [])
 

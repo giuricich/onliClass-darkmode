@@ -3,7 +3,7 @@ $(document).ready(function () {
     console.log("Initializing chat variables");
 
     // dev flag, need to switch when in production
-    const dev = true;
+    const dev = false;
 
 
     const FADE_TIME = 150; // ms
@@ -243,13 +243,11 @@ $(document).ready(function () {
     if (!dev) {
         // Socket events
 
-        // Whenever the server emits 'entrance', log the login message
+        // Whenever the server emits 'entrance', add the login message
         socket.on('entrance', (data) => {
             // Display the welcome message
-            let message = "- Welcome to the Chat – " + data.username;
-            log(message, {
-                prepend: true
-            });
+            let message = `Welcome to the Chat ${data.username}!`
+            addChatMessage({message}, {kind: "welcome"})
         });
 
         // Whenever the server emits 'new message', update the chat body
@@ -257,17 +255,18 @@ $(document).ready(function () {
             addChatMessage(data, {kind : "received"});
         });
 
-        // Whenever the server emits 'user joined', log it in the chat body
+        // Whenever the server emits 'user joined', add it in the chat body
         socket.on('user joined', (data) => {
-            var newUser = '<p class="user">' + data.username + '</p>';
-            log(data.username + ' has joined the room');
-            $("#userList").append(newUser);
+            let message = `${data.username} has joined the class`
+            addChatMessage({message}, {kind: 'user-join'})
+            console.log('this should have been added',message);
         });
 
         // Whenever the server emits 'user left', log it in the chat body
         socket.on('user left', (data) => {
-            log(data.username + ' has left the room');
-            removeChatTyping(data);
+            let message = `${data.username} has left the class`
+            addChatMessage({message}, {kind: 'user-leave'})
+
         });
 
         // Whenever the server emits 'typing', show the typing message
