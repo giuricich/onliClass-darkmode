@@ -3,7 +3,7 @@ $(document).ready(function () {
     console.log("Initializing chat variables");
 
     // dev flag, need to switch when in production
-    const dev = true;
+    const dev = false;
 
 
     const FADE_TIME = 150; // ms
