@@ -1,25 +1,15 @@
-$(document).ready(function () {
+window.onload = () => {
 
     console.log("Initializing chat variables");
 
     // dev flag, need to switch when in production
     const dev = false;
 
-
-    const FADE_TIME = 150; // ms
     const TYPING_TIMER_LENGTH = 400; // ms
-    const COLORS = [
-        '#e21400', '#91580f', '#f8a700', '#f78b00',
-        '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-        '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-    ];
 
     const typeCounter = 0;
     const typeText = "our name i'm guessing";
     const typeSpeed = 75;
-
-    // Initialize variables
-    const $window = $(window);
 
     // form fileds
     const $nameInput = $('#name-input');
@@ -29,8 +19,6 @@ $(document).ready(function () {
     const $chatContainer = document.getElementById('chat-container')
     const $inputMessage = document.getElementById('message-input'); // Input message input box
 
-    const $chatPage = $('.chat.page'); // The chatroom page
-    const $containerWrapper = $('#container-wrapper'); // The main section wrapper
     const $sendButton = $("#sendButton");
 
     // Prompt for setting a username
@@ -47,7 +35,7 @@ $(document).ready(function () {
         message = cleanInput(message);
         // if there is a non-empty message and a socket connection
         if (message && connected) {
-            addChatMessage({username, message}, {kind: "sent"});
+            addChatMessage({ username, message }, { kind: "sent" });
             // tell server to execute 'new message' and send along one parameter
 
             let payload = {
@@ -59,7 +47,6 @@ $(document).ready(function () {
             }
         }
     }
-
 
     const setConnectionInfo = () => {
         username = $nameInput.val().trim()
@@ -76,11 +63,11 @@ $(document).ready(function () {
 
 
         console.log('about to dispatch event');
-        window.dispatchEvent(new CustomEvent('message', { detail: {data, meta} }))
+        window.dispatchEvent(new CustomEvent('message', { detail: { data, meta } }))
 
         $chatContainer.scrollTop = $chatContainer.scrollHeight
 
-                // Don't fade the message in if there is an 'X was typing'
+        // Don't fade the message in if there is an 'X was typing'
         // var $typingMessages = getTypingMessages(data);
         // options = options || {};
         // if ($typingMessages.length !== 0) {
@@ -107,7 +94,7 @@ $(document).ready(function () {
     const addChatTyping = (data) => {
         data.typing = true;
         data.message = 'is typing';
-        addChatMessage(data, {kind: "user-typing"});
+        addChatMessage(data, { kind: "user-typing" });
     }
 
     // Removes the visual chat typing message
@@ -116,45 +103,6 @@ $(document).ready(function () {
             $(this).remove();
         });
     }
-
-
-    // Log a message
-    // const log = (message, options) => {
-    //     var $el = $('<li>').addClass('log').text(message);
-    //     addMessageElement($el, options);
-
-    // }
-
-    // Adds a message element to the messages and scrolls to the bottom
-    // el - The element to add as a message
-    // options.fade - If the element should fade-in (default = true)
-    // options.prepend - If the element should prepend
-    //   all other messages (default = false)
-    // const addMessageElement = (el, options) => {
-    //     var $el = $(el);
-
-    //     // Setup default options
-    //     if (!options) {
-    //         options = {};
-    //     }
-    //     if (typeof options.fade === 'undefined') {
-    //         options.fade = true;
-    //     }
-    //     if (typeof options.prepend === 'undefined') {
-    //         options.prepend = false;
-    //     }
-
-    //     // Apply options
-    //     if (options.fade) {
-    //         $el.hide().fadeIn(FADE_TIME);
-    //     }
-    //     if (options.prepend) {
-    //         $messages.prepend($el);
-    //     } else {
-    //         $messages.append($el);
-    //     }
-    //     $messages[0].scrollTop = $messages[0].scrollHeight;
-    // }
 
     // Prevents input from having injected markup - very cool
     const cleanInput = (input) => {
@@ -165,8 +113,10 @@ $(document).ready(function () {
     const updateTyping = () => {
         if (connected) {
             if (!typing) {
-                typing = true;
-                socket.emit('typing');
+                if (!dev) {
+                    typing = true;
+                    socket.emit('typing');
+                }
             }
             lastTypingTime = (new Date()).getTime();
 
@@ -174,8 +124,10 @@ $(document).ready(function () {
                 var typingTimer = (new Date()).getTime();
                 var timeDiff = typingTimer - lastTypingTime;
                 if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                    socket.emit('stop typing');
-                    typing = false;
+                    if (!dev) {
+                        socket.emit('stop typing');
+                        typing = false;
+                    }
                 }
             }, TYPING_TIMER_LENGTH);
         }
@@ -188,27 +140,9 @@ $(document).ready(function () {
         });
     }
 
-    // Gets the color of a username through our hash function
-    const getUsernameColor = (username) => {
-        // Compute hash code
-        var hash = 7;
-        for (var i = 0; i < username.length; i++) {
-            hash = username.charCodeAt(i) + (hash << 5) - hash;
-        }
-        // Calculate color
-        var index = Math.abs(hash % COLORS.length);
-        return COLORS[index];
-    }
-
     // Keyboard events
-
-    $window.keydown(event => {
-        // Auto-focus the current input when a key is typed
-        //   if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-        //       $currentInput.focus();
-        //   }
-        // When the client hits ENTER on their keyboard
-        if (event.which === 13) {
+    window.onkeydown = ev => {
+        if (ev.key === "Enter") {
             if (username && room_num) {
                 sendMessage();
                 if (!dev) {
@@ -217,28 +151,20 @@ $(document).ready(function () {
                 typing = false;
             }
         }
-    });
+    }
 
-    $window.submit(event => {
+    window.onsubmit = () => {
         setConnectionInfo()
-    })
+    }
 
-    //   $inputMessage.on('input', () => {
-    //       updateTyping();
-    //   });
-
-    // Click events
-
-    // Focus input when clicking on the message input's border
-    //   $inputMessage.click(() => {
-    //       $inputMessage.focus();
-    //   });
-
+    $inputMessage.oninput = () => {
+        console.log('message input trigger!');
+        updateTyping();
+    }
 
     // $sendButton.click(() => {
     //     sendMessage();
     // });
-
 
     if (!dev) {
         // Socket events
@@ -247,25 +173,25 @@ $(document).ready(function () {
         socket.on('entrance', (data) => {
             // Display the welcome message
             let message = `Welcome to the Chat ${data.username}!`
-            addChatMessage({message}, {kind: "welcome"})
+            addChatMessage({ message }, { kind: "welcome" })
         });
 
         // Whenever the server emits 'new message', update the chat body
         socket.on('new message', (data) => {
-            addChatMessage(data, {kind : "received"});
+            addChatMessage(data, { kind: "received" });
         });
 
         // Whenever the server emits 'user joined', add it in the chat body
         socket.on('user joined', (data) => {
             let message = `${data.username} has joined the class`
-            addChatMessage({message}, {kind: 'user-join'})
-            console.log('this should have been added',message);
+            addChatMessage({ message }, { kind: 'user-join' })
+            console.log('this should have been added', message);
         });
 
         // Whenever the server emits 'user left', log it in the chat body
         socket.on('user left', (data) => {
             let message = `${data.username} has left the class`
-            addChatMessage({message}, {kind: 'user-leave'})
+            addChatMessage({ message }, { kind: 'user-leave' })
 
         });
 
@@ -281,9 +207,6 @@ $(document).ready(function () {
 
     }
 
-
-
-
     const typeWriter = () => {
         if (typeCounter < typeText.length) {
             document.getElementById("header").innerHTML += typeText.charAt(typeCounter);
@@ -291,5 +214,4 @@ $(document).ready(function () {
             setTimeout(typeWriter, typeSpeed);
         }
     }
-
-});
+}
