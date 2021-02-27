@@ -1,10 +1,11 @@
 import React, { Component, createRef, FormEvent, SyntheticEvent, useEffect, useState } from 'react'
-import { Avatar, Chat, ChatItemProps, Divider, Input, ShorthandCollection } from '@fluentui/react-northstar'
+import { Avatar, Button, Chat, ChatItemProps, Divider, Input, Text, Segment, SendIcon, ShorthandCollection } from '@fluentui/react-northstar'
 
 export default function ChatClass(props) {
 
   const [items, setItems] = useState([])
   const [input, setInput] = useState("")
+  const [typing, setTyping] = useState([])
 
   const COLORS = [
     '#E73550', '#8E192E', '#CC4A31', '#664134',
@@ -63,29 +64,50 @@ export default function ChatClass(props) {
           return [...currentItems, message]
         })
       }
-      else {
+      else{
         setItems(currentItems => [...currentItems,
         {
-          children: <Divider content={data.message} color={meta.kind === 'welcome' ? 'brand' : 'grey'} important={meta.kind === 'welcome'} />,
+          // TODO: figure out how to set colors using the 'color' prop
+          children: <Divider content={data.message} color="brand" important />,
           key: 'message-id-' + currentItems.length
         }
         ])
       }
     })
+
+    window.addEventListener('typing', (event: CustomEvent) => {
+      const username = event.detail.username
+      const isTyping = event.detail.current
+
+      // need to check if the username is already on the list before adding it
+      // try using javascript map to make things intresting
+
+      if(isTyping) {
+        setTyping( currentTyping => [...currentTyping, <Text content={username + "..."} />])
+      }
+      else {
+        // TODO: remove typing indicator
+
+      }
+
+    })
+
   }, [])
 
 
-  //TODO: finalize input below chat, and add typing indicators 
+  //TODO: connect button to submit action
 
   return (
-    <div style={{ height: "100%", width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: 'column' }}>
 
-      <div id="chat-container" style={{ height: "100%", width: "100%", overflowY: 'scroll' }}>
+      <div id="chat-container" style={{ height: "100%", overflowY: 'scroll' }}>
         <Chat items={items} styles={{ minHeight: '100%' }} />
       </div>
 
-      <div style={{}}>
-        <Input inverted onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setInput(e.target.value) }} value={input} id="message-input" label="Type a message" labelPosition="inside" />
+      <div className="bottom-chat" style={{display: "flex", alignItems: 'center'}}>
+        <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setInput(e.target.value) }} value={input} id="message-input" placeholder="Type a message..."/>
+        <Button icon={<SendIcon/>} iconOnly primary text />
+        <Segment color="brand" content={typing} />
       </div>
 
     </div>

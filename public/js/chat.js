@@ -3,10 +3,13 @@ window.onload = () => {
     console.log("Initializing chat variables");
 
     // dev flag, need to switch when in production
+    // const dev = true;
     const dev = false;
 
-    const TYPING_TIMER_LENGTH = 400; // ms
 
+
+    
+    const TYPING_TIMER_LENGTH = 400; // ms
     const typeCounter = 0;
     const typeText = "our name i'm guessing";
     const typeSpeed = 75;
@@ -60,9 +63,6 @@ window.onload = () => {
 
     // Adds the visual chat message to the message list
     const addChatMessage = (data, meta) => {
-
-
-        console.log('about to dispatch event');
         window.dispatchEvent(new CustomEvent('message', { detail: { data, meta } }))
 
         $chatContainer.scrollTop = $chatContainer.scrollHeight
@@ -91,17 +91,13 @@ window.onload = () => {
     }
 
     // Adds the visual chat typing message
-    const addChatTyping = (data) => {
-        data.typing = true;
-        data.message = 'is typing';
-        addChatMessage(data, { kind: "user-typing" });
+    const addChatTyping = username => {
+        window.dispatchEvent(new CustomEvent('typing', { detail: { username, current: true } }))
     }
 
     // Removes the visual chat typing message
-    const removeChatTyping = (data) => {
-        getTypingMessages(data).fadeOut(function () {
-            $(this).remove();
-        });
+    const removeChatTyping = username => {
+        window.dispatchEvent(new CustomEvent('typing', { detail: { username, current: false } }))
     }
 
     // Prevents input from having injected markup - very cool
@@ -110,12 +106,12 @@ window.onload = () => {
     }
 
     // Updates the typing event
-    const updateTyping = () => {
+    const updateTyping = args => {
         if (connected) {
             if (!typing) {
                 if (!dev) {
                     typing = true;
-                    socket.emit('typing');
+                    socket.emit('typing', username);
                 }
             }
             lastTypingTime = (new Date()).getTime();
@@ -173,7 +169,7 @@ window.onload = () => {
         socket.on('entrance', (data) => {
             // Display the welcome message
             let message = `Welcome to the Chat ${data.username}!`
-            addChatMessage({ message }, { kind: "welcome" })
+            addChatMessage({ message, username }, { kind: "welcome" })
         });
 
         // Whenever the server emits 'new message', update the chat body
@@ -196,13 +192,14 @@ window.onload = () => {
         });
 
         // Whenever the server emits 'typing', show the typing message
-        socket.on('typing', (data) => {
-            addChatTyping(data);
+        socket.on('typing', (user_typing) => {
+            addChatTyping(user_typing);
+            console.log(user_typing, 'is typing');
         });
 
         // Whenever the server emits 'stop typing', kill the typing message
-        socket.on('stop typing', (data) => {
-            removeChatTyping(data);
+        socket.on('stop typing', (user_typing) => {
+            removeChatTyping(user_typing);
         });
 
     }

@@ -195,6 +195,14 @@ io.on('connection', (socket) => {
         allClients.splice(i, 1);
     });
 
+    socket.on('typing', username => {
+        console.log(username, '....')
+        if (!joined_room) return;
+        allRooms.get(joined_room).forEach((sock) => {
+            socket.to(sock.id).emit('typing', username);
+        });
+    })
+
 
     socket.on('stop typing', () => {
         console.log('someone stopped typing');
