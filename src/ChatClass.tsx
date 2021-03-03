@@ -3,6 +3,7 @@ import { Avatar, Button, Chat, ChatItemProps, Divider, Input, Text, Segment, Sen
 
 export default function ChatClass(props) {
 
+
   const [items, setItems] = useState([])
   const [input, setInput] = useState("")
   const [typing, setTyping] = useState([])
@@ -13,7 +14,9 @@ export default function ChatClass(props) {
     '#7478C1', '#3E2D3B', '#943670', '#B4009E'
   ];
 
-  const usernameColor = (username) => {
+  const ELIPSE = '... '
+
+  const usernameColor = username => {
     // Compute hash code
     var hash = 7;
     for (var i = 0; i < username.length; i++) {
@@ -64,7 +67,7 @@ export default function ChatClass(props) {
           return [...currentItems, message]
         })
       }
-      else{
+      else {
         setItems(currentItems => [...currentItems,
         {
           // TODO: figure out how to set colors using the 'color' prop
@@ -75,27 +78,25 @@ export default function ChatClass(props) {
       }
     })
 
+
+    // TODO: segment style jumps around when it gets populated with a text component for the first time
     window.addEventListener('typing', (event: CustomEvent) => {
       const username = event.detail.username
       const isTyping = event.detail.current
 
-      // need to check if the username is already on the list before adding it
-      // try using javascript map to make things intresting
-
-      if(isTyping) {
-        setTyping( currentTyping => [...currentTyping, <Text content={username + "..."} />])
+      if (isTyping) {
+        setTyping(currentTyping => {
+          return [...currentTyping, <Text content={username} />]
+        })
       }
       else {
-        // TODO: remove typing indicator
-
+        setTyping(currentTyping => currentTyping.filter(element => element.props.content != username))
       }
-
     })
-
   }, [])
 
 
-  //TODO: connect button to submit action
+  //TODO: when any user presses 'enter' or clicks the button it clears the input from all users. D:
 
   return (
     <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -104,9 +105,10 @@ export default function ChatClass(props) {
         <Chat items={items} styles={{ minHeight: '100%' }} />
       </div>
 
-      <div className="bottom-chat" style={{display: "flex", alignItems: 'center'}}>
-        <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setInput(e.target.value) }} value={input} id="message-input" placeholder="Type a message..."/>
-        <Button icon={<SendIcon/>} iconOnly primary text />
+
+      <div className="bottom-chat" style={{ display: "flex", alignItems: 'center' }}>
+        <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setInput(e.target.value) }} value={input} id="message-input" placeholder="Type a message..." />
+        <Button onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: "Enter" }))} icon={<SendIcon />} iconOnly primary text />
         <Segment color="brand" content={typing} />
       </div>
 

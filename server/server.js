@@ -204,12 +204,12 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('stop typing', () => {
+    socket.on('stop typing', username => {
         console.log('someone stopped typing');
 
         if (!joined_room) return;
         allRooms.get(joined_room).forEach((sock) => {
-            socket.to(sock.id).emit('stop typing');
+            socket.to(sock.id).emit('stop typing', username);
         });
     });
 

@@ -1,15 +1,10 @@
 window.onload = () => {
 
-    console.log("Initializing chat variables");
-
     // dev flag, need to switch when in production
     // const dev = true;
     const dev = false;
 
-
-
-    
-    const TYPING_TIMER_LENGTH = 400; // ms
+    const TYPING_TIMER_LENGTH = 1400; // ms
     const typeCounter = 0;
     const typeText = "our name i'm guessing";
     const typeSpeed = 75;
@@ -121,7 +116,7 @@ window.onload = () => {
                 var timeDiff = typingTimer - lastTypingTime;
                 if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
                     if (!dev) {
-                        socket.emit('stop typing');
+                        socket.emit('stop typing', username);
                         typing = false;
                     }
                 }
@@ -177,12 +172,13 @@ window.onload = () => {
             addChatMessage(data, { kind: "received" });
         });
 
+        //              *** broken for now ***
         // Whenever the server emits 'user joined', add it in the chat body
-        socket.on('user joined', (data) => {
-            let message = `${data.username} has joined the class`
-            addChatMessage({ message }, { kind: 'user-join' })
-            console.log('this should have been added', message);
-        });
+        // socket.on('user joined', (data) => {
+        //     let message = `${data.username} has joined the class`
+        //     addChatMessage({ message }, { kind: 'user-join' })
+        //     console.log('this should have been added', message);
+        // });
 
         // Whenever the server emits 'user left', log it in the chat body
         socket.on('user left', (data) => {
@@ -200,6 +196,7 @@ window.onload = () => {
         // Whenever the server emits 'stop typing', kill the typing message
         socket.on('stop typing', (user_typing) => {
             removeChatTyping(user_typing);
+            console.log(user_typing, 'stopped typing')
         });
 
     }
