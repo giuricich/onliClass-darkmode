@@ -8,8 +8,11 @@
     margin-right: 0px;
 }
 
-.bottom-chat > .ui-segment {
+.bottom-chat > .ui-text {
     margin-left: 2vw;
     width: 100%;
     min-width: 75px;
+    max-height: 39px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

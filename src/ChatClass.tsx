@@ -43,11 +43,14 @@ export default function ChatClass(props) {
       console.log('data:', data);
       console.log('kind:', meta);
 
+      // path for chat messages
       if (meta.kind === 'sent' || meta.kind === 'received') {
-        setInput("")
         setItems(currentItems => {
+
+          // this clears the input if the user is sending a message
+          meta.kind === 'sent' && setInput("") 
+
           // this is for the first time it runs and there is nothing in the currentItems array
-          // probs a better way to do this, but whatevs for now
           let lastItem = { message: { props: { author: null } }, children: {} }
 
           // if there is at least one element in currentItem, lastItem is set to the last element in the array
@@ -67,6 +70,7 @@ export default function ChatClass(props) {
           return [...currentItems, message]
         })
       }
+      // path for chat information 
       else {
         setItems(currentItems => [...currentItems,
         {
@@ -81,22 +85,21 @@ export default function ChatClass(props) {
 
     // TODO: segment style jumps around when it gets populated with a text component for the first time
     window.addEventListener('typing', (event: CustomEvent) => {
-      const username = event.detail.username
+      const username = event.detail.username + ELIPSE
       const isTyping = event.detail.current
 
       if (isTyping) {
         setTyping(currentTyping => {
-          return [...currentTyping, <Text content={username} />]
+          return [...currentTyping, username]
         })
       }
       else {
-        setTyping(currentTyping => currentTyping.filter(element => element.props.content != username))
+        setTyping(currentTyping => currentTyping.filter(element => element !== username))
       }
     })
   }, [])
 
-
-  //TODO: when any user presses 'enter' or clicks the button it clears the input from all users. D:
+  //TODO: fix annoying popup when publisher role is not avaliable
 
   return (
     <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -109,7 +112,7 @@ export default function ChatClass(props) {
       <div className="bottom-chat" style={{ display: "flex", alignItems: 'center' }}>
         <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setInput(e.target.value) }} value={input} id="message-input" placeholder="Type a message..." />
         <Button onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: "Enter" }))} icon={<SendIcon />} iconOnly primary text />
-        <Segment color="brand" content={typing} />
+        <Text content={typing} />
       </div>
 
     </div>
