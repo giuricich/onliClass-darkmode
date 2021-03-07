@@ -83,7 +83,6 @@ export default function ChatClass(props) {
     })
 
 
-    // TODO: segment style jumps around when it gets populated with a text component for the first time
     window.addEventListener('typing', (event: CustomEvent) => {
       const username = event.detail.username + ELIPSE
       const isTyping = event.detail.current

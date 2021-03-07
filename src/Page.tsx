@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
 import ChatArea from "./Chat"
@@ -8,6 +8,11 @@ const startWithDialog = true;
 
 function Page() {
   const [open, setOpen] = useState(startWithDialog)
+  const [host, setHost] = useState()
+
+  useEffect(() => {
+    window.addEventListener('role', (event: CustomEvent) => setHost(event.detail.is_host))
+  }, [])
 
   const formFields = [
     {
@@ -47,6 +52,7 @@ function Page() {
     />,
     <Video 
       styles={{gridColumn: 'span 2'}}
+      host={host}
       key='1'
     />,
     <Segment

@@ -137,7 +137,7 @@ window.onload = () => {
             if (username && room_num) {
                 sendMessage();
                 if (!dev) {
-                    socket.emit('stop typing');
+                    socket.emit('stop typing', username);
                 }
                 typing = false;
             }
@@ -152,10 +152,6 @@ window.onload = () => {
         console.log('message input trigger!');
         updateTyping();
     }
-
-    // $sendButton.click(() => {
-    //     sendMessage();
-    // });
 
     if (!dev) {
         // Socket events

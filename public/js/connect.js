@@ -59,9 +59,9 @@ socket.on('join_room_fail', (data) => {
 
 socket.on('join_room_success', (data) => {
 
-    let is_host = false;
+    const is_host = data.role === 'host';
 
-    if(data.role === 'host') is_host = true;
+    window.dispatchEvent(new CustomEvent('role', { detail: {is_host}}))
 
     let getInfo = async () => {
         const response = await fetch('/room/' + data.room_num);
@@ -94,8 +94,12 @@ function initializeSession(apiKey, sessionId, token, topublish) {
     if(!topublish){
         session.on("streamCreated", (event) =>  {
             console.log(event.stream);
-            session.subscribe(event.stream, 'publisher');
-        });
+            session.subscribe(event.stream, 'subscriber', {
+                insertMode: 'append',
+                width: '100%',
+                height: '100%'
+            });
+        }, handleError);
     }
     if(topublish){
     console.log("publishing");
