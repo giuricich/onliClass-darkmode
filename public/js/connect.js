@@ -61,7 +61,7 @@ socket.on('join_room_success', (data) => {
 
     const is_host = data.role === 'host';
 
-    window.dispatchEvent(new CustomEvent('role', { detail: {is_host}}))
+    window.dispatchEvent(new CustomEvent('role', { detail: { is_host } }))
 
     let getInfo = async () => {
         const response = await fetch('/room/' + data.room_num);
@@ -89,10 +89,9 @@ socket.on('create_room_success', (data) => {
 /* Vonage API scripts */
 
 function initializeSession(apiKey, sessionId, token, topublish) {
-    console.log(topublish);
     var session = OT.initSession(apiKey, sessionId);
-    if(!topublish){
-        session.on("streamCreated", (event) =>  {
+    if (!topublish) {
+        session.on("streamCreated", (event) => {
             console.log(event.stream);
             session.subscribe(event.stream, 'subscriber', {
                 insertMode: 'append',
@@ -101,40 +100,39 @@ function initializeSession(apiKey, sessionId, token, topublish) {
             });
         }, handleError);
     }
-    if(topublish){
-    console.log("publishing");
-    var publisher = OT.initPublisher('publisher', {
-        insertMode: 'append',
-        width: '100%',
-        height: '100%'
-    }, handleError);
+    if (topublish) {
+        var publisher = OT.initPublisher('publisher', {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%'
+        }, handleError);
 
-    publisher.on({
-        streamCreated: function (event) {
-          console.log("Publisher started streaming.");
-        },
-        streamDestroyed: function (event) {
-          console.log("Publisher stopped streaming. Reason: "
-            + event.reason);
+        publisher.on({
+            streamCreated: function (event) {
+                console.log("Publisher started streaming.");
+            },
+            streamDestroyed: function (event) {
+                console.log("Publisher stopped streaming. Reason: "
+                    + event.reason);
+            }
+        });
+    }
+
+
+
+    // Connect to the session
+    session.connect(token, function (error) {
+        if (error) {
+            handleError(error);
+        } else {
+            if (topublish) {
+                session.publish(publisher, handleError);
+            }
         }
     });
 }
 
-
-// Connect to the session
-session.connect(token, function (error) {
-    if (error) {
-    handleError(error);
-    } else {
-    session.publish(publisher, handleError);
-    }
-});
-}
-
-
 // Handling all of our errors here by alerting them
 function handleError(error) {
-if (error) {
-    alert(error.message);
-}
+    if (error) { alert(error.message) }
 }
