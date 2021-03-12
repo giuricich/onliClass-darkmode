@@ -84,8 +84,6 @@ socket.on('create_room_success', (data) => {
 });
 
 
-
-
 /* Vonage API scripts */
 
 function initializeSession(apiKey, sessionId, token, topublish) {
@@ -100,7 +98,7 @@ function initializeSession(apiKey, sessionId, token, topublish) {
             });
         }, handleError);
     }
-    if (topublish) {
+    else if (topublish) {
         var publisher = OT.initPublisher('publisher', {
             insertMode: 'append',
             width: '100%',
@@ -117,8 +115,6 @@ function initializeSession(apiKey, sessionId, token, topublish) {
             }
         });
     }
-
-
 
     // Connect to the session
     session.connect(token, function (error) {

@@ -46,6 +46,7 @@ function Page() {
 
   const gridItems = [
     <Segment 
+      id="doc"
       color="red"
       inverted
       key='0'
@@ -56,6 +57,7 @@ function Page() {
       key='1'
     />,
     <Segment
+      id="draw"
       color="green"
       styles={{gridColumn: 'span 2'}}
       inverted
@@ -70,9 +72,9 @@ function Page() {
     <div id='page'>
       <Header content="OnliClass" align='center' />
       <div id='content'
-        style={{margin: '0px 6vw'}}
       >
         <Dialog
+          id="dialog"
           content={
             <Form
               fields={formFields}
@@ -85,9 +87,11 @@ function Page() {
           open={open}
           trapFocus={true}
         />
-        <Grid 
+        <Grid
+          id="the-grid" 
           content={gridItems}
-          columns="1fr 0.15fr 0.85fr" rows="40vh 40vh"
+          columns="1fr 0.15fr 0.85fr" rows="repeat(2, 50%)"
+          style={{height: '100%'}}
         />
       </div>
     </div>

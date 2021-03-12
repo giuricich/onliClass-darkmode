@@ -1,6 +1,19 @@
 #page {
     height: 100vh;
     padding: 1%;
+    display: flex;
+    flex-direction: column;
+}
+
+#content {
+    margin: 0px 6vw;
+    margin-bottom: 2%;
+    height: 100%;
+    overflow: auto;
+}
+
+#grid {
+    height: 100%;
 }
 
 .ui-input {
@@ -15,4 +28,20 @@
     max-height: 39px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* mobile ui patches */
+/* these are vscode css parser / scanner errors, it is valid css */
+@media (orientation: portrait) or (max-width: 700px) {
+    #dialog { 
+        width: 75%;
+    }
+    
+    #the-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #doc, #draw {
+        display: none;
+    }
 }
