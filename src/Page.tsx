@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
-import ChatArea from "./Chat"
 import ChatClass from "./ChatClass";
+import Canvas from "./Canvas";
 
 const startWithDialog = true;
 
@@ -56,11 +56,9 @@ function Page() {
       host={host}
       key='1'
     />,
-    <Segment
+    <Canvas
       id="draw"
-      color="green"
       styles={{gridColumn: 'span 2'}}
-      inverted
       key='2'
     />,
     <ChatClass 
