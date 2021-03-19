@@ -25,6 +25,13 @@
     margin-right: 0px;
 }
 
+canvas {
+    border: white inset;
+    box-sizing: border-box;
+    
+}
+
+
 .bottom-chat > .ui-text {
     margin-left: 2vw;
     width: 100%;

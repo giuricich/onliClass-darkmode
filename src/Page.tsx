@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/react-northstar"
 import Video from "./Video";
 import ChatClass from "./ChatClass";
-import Canvas from "./Canvas";
+import Whiteboard from "./Whiteboard";
 
 const startWithDialog = true;
 
@@ -56,7 +56,7 @@ function Page() {
       host={host}
       key='1'
     />,
-    <Canvas
+    <Whiteboard
       id="draw"
       styles={{gridColumn: 'span 2'}}
       key='2'

@@ -58,7 +58,7 @@ window.onload = () => {
 
     // Adds the visual chat message to the message list
     const addChatMessage = (data, meta) => {
-        window.dispatchEvent(new CustomEvent('message', { detail: { data, meta } }))
+        window.dispatchEvent(new CustomEvent('chat-message', { detail: { data, meta } }))
 
         $chatContainer.scrollTop = $chatContainer.scrollHeight
 

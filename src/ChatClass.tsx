@@ -35,7 +35,7 @@ export default function ChatClass(props) {
     console.clear()
     //_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 
-    window.addEventListener('message', (event: CustomEvent) => {
+    window.addEventListener('chat-message', (event: CustomEvent) => {
       const meta = event.detail.meta;
       const data = event.detail.data;
       event.stopImmediatePropagation();
