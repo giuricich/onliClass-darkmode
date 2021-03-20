@@ -12,8 +12,8 @@ type MouseData = {
 export default function Whiteboard(props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [color, setColor] = useState("#FF6900")
-  // const [mouseData, setMouseData] = useState<MouseData>({drawing: false})
-  let mouseData: MouseData = {x: null, y: null, drawing: false}
+  const [mouseData, setMouseData] = useState<MouseData>({x: null, y: null, drawing: false})
+  // let mouseData: MouseData = {x: null, y: null, drawing: false}
 
   const darkmode = {
     'default': {
@@ -42,43 +42,26 @@ export default function Whiteboard(props) {
   // when the component loads for the first time...
   useEffect(() => {
     const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
+    // todo: canvas still does not draw accurately on a full sized canvas
+    canvas.style.width = '100%'
+    canvas.style.height = '100%'
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
 
     const handleMouse = (event: MouseEvent) => {
       const mousex = event.x - canvas.offsetLeft
       const mousey = event.y - canvas.offsetTop
-      console.log(event.type);
       switch (event.type) {
         
         case 'mousedown':
-          mouseData = {x: mousex, y: mousey, drawing: true}
-          // when the mouse is held down
+          setMouseData({x: mousex, y: mousey, drawing: true})
           break;
         case 'mousemove':
-          // console.log('moving because drawing: ', mouseData.drawing);
-          
-          if(mouseData.drawing) {
-            console.log('x: ', mousex);
-            console.log('drawing: ', mouseData.drawing);
-            
-            // draw
-            ctx.beginPath()
-            ctx.strokeStyle = color
-            ctx.lineWidth = 2
-            ctx.moveTo(mouseData.x, mouseData.y)
-            ctx.lineTo(mousex, mousey)
-            ctx.stroke()
-            ctx.closePath()
-          }
-
-          mouseData.x = mousex
-          mouseData.y = mousey
+          setMouseData(state => ({...state, x: mousex, y: mousey}))
           break;
         case 'mouseup':
         case 'mouseout':
-        case 'mouseleave':
-          console.log('event: ', event.type);
-          mouseData.drawing = false
+          setMouseData(state => ({...state, drawing: false}))
           break;
       }
     }
@@ -87,7 +70,7 @@ export default function Whiteboard(props) {
     canvas.addEventListener('mousedown', handleMouse)
     canvas.addEventListener('mouseup', handleMouse)
     canvas.addEventListener('mouseout', handleMouse)
-    canvas.addEventListener('mouseleave', handleMouse)
+
 
   }, [])
 
@@ -100,7 +83,7 @@ export default function Whiteboard(props) {
   return (
     <div id={props.id} style={props.styles}>
       <Popup pointing trigger={<Button id="color-picker" iconOnly text content={<Segment inverted style={{ borderRadius: '4px', background: color }} />} />} content={<TwitterPicker onChangeComplete={handleColor} color={color} triangle="hide" styles={darkmode} />} />
-      <Canvas ref={canvasRef} />
+      <Canvas mouseData={mouseData} color={color} ref={canvasRef} />
     </div>
   )
 }

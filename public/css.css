@@ -25,6 +25,10 @@
     margin-right: 0px;
 }
 
+#draw {
+    width: 100%;
+}
+
 canvas {
     border: white inset;
     box-sizing: border-box;
