@@ -9,6 +9,10 @@ type MouseData = {
   drawing?: boolean
 }
 
+type DrawingEvent = {
+
+}
+
 export default function Whiteboard(props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [color, setColor] = useState("#FF6900")
@@ -42,11 +46,8 @@ export default function Whiteboard(props) {
   // when the component loads for the first time...
   useEffect(() => {
     const canvas = canvasRef.current
-    // todo: canvas still does not draw accurately on a full sized canvas
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
+    const container = canvas.parentElement
+
 
     const handleMouse = (event: MouseEvent) => {
       const mousex = event.x - canvas.offsetLeft
@@ -66,11 +67,17 @@ export default function Whiteboard(props) {
       }
     }
 
+    const handleDrawing = (event: CustomEvent) => {
+
+    }
+
     canvas.addEventListener('mousemove', handleMouse)
     canvas.addEventListener('mousedown', handleMouse)
     canvas.addEventListener('mouseup', handleMouse)
     canvas.addEventListener('mouseout', handleMouse)
 
+    window.addEventListener('drawing', handleDrawing)
+    
 
   }, [])
 

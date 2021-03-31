@@ -1,8 +1,12 @@
 import { RefForward } from '@fluentui/react-northstar'
+import { Socket } from 'dgram'
 import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from 'react'
 import { isContext } from 'vm'
 
-//todo preformance is ass
+// dev flag, need to switch when in production
+// const dev = true
+const dev = false
+
 
 type Props = {
   mouseData?: MouseData,
@@ -13,6 +17,12 @@ type MouseData = {
   x?: number,
   y?: number,
   drawing?: boolean
+}
+
+type DrawingEvent = {
+  mouseData: MouseData,
+  oldMouse: MouseData,
+  color: string
 }
 
 const useCombinedRefs = (...refs) => {
@@ -38,26 +48,61 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(({ mouseData, color }, ref) 
 
   const innerRef = useRef(null)
   const comboRef = useCombinedRefs(ref, innerRef)
-  const [oldMouse, setOldMouse] = useState<MouseData>({ x: null, y: null})
+  const [oldMouse, setOldMouse] = useState<MouseData>({ x: null, y: null })
 
+  const draw = (context: CanvasRenderingContext2D, mouseData: MouseData, oldMouse: MouseData, color: string) => {
+    context.beginPath()
+    context.strokeStyle = color
+    context.lineWidth = 2
+    context.moveTo(mouseData.x, mouseData.y)
+    context.lineTo(oldMouse.x, oldMouse.y)
+    context.stroke()
+    context.closePath()
+  }
+
+  const sizeCanvas = (canvas: HTMLCanvasElement ) => {
+    canvas.style.width = '100%'
+    canvas.style.height = '100%'
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+  }
 
   useEffect(() => {
-    const context = comboRef.current.getContext('2d')
-    if(mouseData.drawing) {
-      console.log('mouseData: ', mouseData);
-      console.log('oldMouse: ', oldMouse);
-      
-      
-      context.beginPath()
-      context.strokeStyle = color
-      context.lineWidth = 2
-      context.moveTo(mouseData.x, mouseData.y)
-      context.lineTo(oldMouse.x, oldMouse.y)
-      context.stroke()
-      context.closePath()
+    const canvas = comboRef.current
+    sizeCanvas(canvas)
+    window.addEventListener('resize', () => sizeCanvas(canvas))
+
+    if (!dev) {
+      //@ts-expect-error
+      socket.on('drawing', (event: DrawingEvent) => {
+        const context = canvas.getContext('2d')
+        draw(context, event.mouseData, event.oldMouse, event.color)
+      })
     }
-  
-    setOldMouse({x: mouseData.x, y: mouseData.y})
+
+  }, [])
+  // empty array here means this only runs once 
+
+
+  // mouse efect
+  useEffect(() => {
+
+    const context = comboRef.current.getContext('2d')
+    if (mouseData.drawing) {
+
+      draw(context, mouseData, oldMouse, color)
+
+      if (!dev) {
+        // @ts-expect-error
+        socket.emit('drawing', {
+          mouseData,
+          oldMouse,
+          color
+        })
+      }
+    }
+
+    setOldMouse({ x: mouseData.x, y: mouseData.y })
 
   }, [mouseData])
 

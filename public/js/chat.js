@@ -1,8 +1,8 @@
 window.onload = () => {
 
     // dev flag, need to switch when in production
-    const dev = true;
-    // const dev = false;
+    // const dev = true;
+    const dev = false;
 
     const TYPING_TIMER_LENGTH = 1400; // ms
     const typeCounter = 0;
@@ -61,28 +61,6 @@ window.onload = () => {
         window.dispatchEvent(new CustomEvent('chat-message', { detail: { data, meta } }))
 
         $chatContainer.scrollTop = $chatContainer.scrollHeight
-
-        // Don't fade the message in if there is an 'X was typing'
-        // var $typingMessages = getTypingMessages(data);
-        // options = options || {};
-        // if ($typingMessages.length !== 0) {
-        //     options.fade = false;
-        //     $typingMessages.remove();
-        // }
-
-        // var $usernameDiv = $('<span class="username"/>')
-        //     .text(data.username)
-        //     .css('color', getUsernameColor(data.username));
-        // var $messageBodyDiv = $('<span class="messageBody">')
-        //     .text(data.message);
-
-        // var typingClass = data.typing ? 'typing' : '';
-        // var $messageDiv = $('<li class="message"/>')
-        //     .data('username', data.username)
-        //     .addClass(typingClass)
-        //     .append($usernameDiv, $messageBodyDiv);
-
-        // addMessageElement($messageDiv, options);
     }
 
     // Adds the visual chat typing message
@@ -168,14 +146,6 @@ window.onload = () => {
             addChatMessage(data, { kind: "received" });
         });
 
-        //              *** broken for now ***
-        // Whenever the server emits 'user joined', add it in the chat body
-        // socket.on('user joined', (data) => {
-        //     let message = `${data.username} has joined the class`
-        //     addChatMessage({ message }, { kind: 'user-join' })
-        //     console.log('this should have been added', message);
-        // });
-
         // Whenever the server emits 'user left', log it in the chat body
         socket.on('user left', (data) => {
             let message = `${data.username} has left the class`
@@ -194,7 +164,6 @@ window.onload = () => {
             removeChatTyping(user_typing);
             console.log(user_typing, 'stopped typing')
         });
-
     }
 
     const typeWriter = () => {
