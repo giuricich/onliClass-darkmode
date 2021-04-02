@@ -1,8 +1,8 @@
 window.onload = () => {
 
     // dev flag, need to switch when in production
-    const dev = true;
-    // const dev = false;
+    // const dev = true;
+    const dev = false;
 
     const TYPING_TIMER_LENGTH = 1400; // ms
     const typeCounter = 0;

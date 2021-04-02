@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 
 // dev flag, need to switch when in production
-const dev = true
-// const dev = false
+// const dev = true
+const dev = false
 
 
 type Props = {
