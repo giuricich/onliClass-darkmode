@@ -9,10 +9,6 @@ type MouseData = {
   drawing?: boolean
 }
 
-type DrawingEvent = {
-
-}
-
 export default function Whiteboard(props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [color, setColor] = useState("#FF6900")
@@ -67,8 +63,21 @@ export default function Whiteboard(props) {
       }
     }
 
-    const handleDrawing = (event: CustomEvent) => {
-
+    const handleTouch = (event: TouchEvent) => {
+      const touchx = event.touches[0].clientX
+      const touchy = event.touches[0].clientY
+      switch(event.type) {
+        case 'touchstart':
+          setMouseData({x: touchx, y: touchy, drawing: true})
+          break;
+        case 'touchmove':
+          setMouseData(state => ({...state, x: touchx, y: touchy}))
+          break;
+        case 'touchcancel':
+        case 'touchend':
+          setMouseData(state => ({...state, drawing: false}))
+          break;
+      }
     }
 
     canvas.addEventListener('mousemove', handleMouse)
@@ -76,9 +85,12 @@ export default function Whiteboard(props) {
     canvas.addEventListener('mouseup', handleMouse)
     canvas.addEventListener('mouseout', handleMouse)
 
-    window.addEventListener('drawing', handleDrawing)
+    canvas.addEventListener('touchstart', handleTouch);
+    canvas.addEventListener('touchend', handleTouch);
+    canvas.addEventListener('touchcancel', handleTouch);
+    canvas.addEventListener('touchmove', handleTouch);
+  
     
-
   }, [])
 
 

@@ -12,12 +12,15 @@
     overflow: auto;
 }
 
-#grid {
-    height: 100%;
+#the-grid {
+    overflow: hidden;
 }
 
 #color-picker {
     position: absolute;
+    padding: 5px;
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
 
 .ui-input {
@@ -30,9 +33,12 @@
 }
 
 canvas {
-    border: white inset;
+    border: white outset;
     box-sizing: border-box;
-    
+    box-sizing: border-box;
+    border-bottom-style: inset;
+    border-right-style: inset;
+    border-width: 2px;
 }
 
 

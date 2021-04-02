@@ -3,6 +3,7 @@ import { Dialog, Header, Input, Form, Button, Grid, Segment } from "@fluentui/re
 import Video from "./Video";
 import ChatClass from "./ChatClass";
 import Whiteboard from "./Whiteboard";
+import Doc from './Doc';
 
 const startWithDialog = true;
 
@@ -45,10 +46,8 @@ function Page() {
   ]
 
   const gridItems = [
-    <Segment 
+    <Doc 
       id="doc"
-      color="red"
-      inverted
       key='0'
     />,
     <Video 
