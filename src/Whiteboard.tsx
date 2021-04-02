@@ -63,7 +63,9 @@ export default function Whiteboard(props) {
       }
     }
 
+    // should be integrated into handleMouse eventaully
     const handleTouch = (event: TouchEvent) => {
+      event.preventDefault()
       const touchx = event.touches[0].clientX
       const touchy = event.touches[0].clientY
       switch(event.type) {
